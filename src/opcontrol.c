@@ -44,7 +44,7 @@ void operatorControl() {
 	int sticks[4] = { 0, 0, 0, 0 };
 	unsigned int btns[4] = { 0, 0, 0, 0 };
 	//unsigned int btnsLast[4] =  { 0, 0, 0, 0 };
-	int mtrPwr[5] = { 0, 0, 0, 0, 0 };
+	int sysPwr[5] = { 0, 0, 0, 0, 0 };
 	//int mtrPwrLast[5] = { 0, 0, 0, 0, 0};
 
 	while (true) {
@@ -66,35 +66,35 @@ void operatorControl() {
 				btns[group] += JOY_RIGHT;
 		}
 
-		mtrPwr[LEFT_DRIVE] = sticks[2] + sticks[3];
-		mtrPwr[RIGHT_DRIVE] = sticks[2] - sticks[3];
-		mtrPwr[LIFT] = (btns[0] & JOY_UP) ^ (btns[0] & JOY_DOWN)
+		sysPwr[LEFT_DRIVE] = sticks[2] + sticks[3];
+		sysPwr[RIGHT_DRIVE] = sticks[2] - sticks[3];
+		sysPwr[LIFT] = (btns[0] & JOY_UP) ^ (btns[0] & JOY_DOWN)
 			? (btns[0] & JOY_UP)
 				? 127
 				: -127
 			: 0;
-		mtrPwr[MOBILE_GOAL] = (btns[1] & JOY_UP) ^ (btns[1] & JOY_DOWN)
+		sysPwr[MOBILE_GOAL] = (btns[1] & JOY_UP) ^ (btns[1] & JOY_DOWN)
 				? (btns[1] & JOY_UP)
 				? 127
 				: -127
 			: 0;
-		mtrPwr[INTAKE] = (btns[2] & JOY_UP) ^ (btns[2] & JOY_DOWN)
+		sysPwr[INTAKE] = (btns[2] & JOY_UP) ^ (btns[2] & JOY_DOWN)
 			? (btns[2] & JOY_UP)
 				? 127
 				: -127
 			: 0;
 
-		setDriveL(mtrPwr[LEFT_DRIVE]);
-		setDriveR(mtrPwr[RIGHT_DRIVE]);
-		setLift(mtrPwr[LIFT]);
-		setGoal(mtrPwr[MOBILE_GOAL]);
-		setIntake(mtrPwr[INTAKE]);
+		setDriveL(sysPwr[LEFT_DRIVE]);
+		setDriveR(sysPwr[RIGHT_DRIVE]);
+		setLift(sysPwr[LIFT]);
+		setGoal(sysPwr[MOBILE_GOAL]);
+		setIntake(sysPwr[INTAKE]);
 
 		/*
 		for(unsigned int i = 0; i < sizeof(mtrPwr) / sizeof(int); i++)
-			mtrPwrLast[i] = mtrPwr[i];
+			mtrPwrLast[i] = sysPwr[i];
 		*/
-		
+
 		/*
 		for(unsigned int i = 0; i < sizeof(btns) / sizeof(int); i++)
 			btnsLast[i] = btns[i];
