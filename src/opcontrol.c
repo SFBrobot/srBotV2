@@ -12,6 +12,7 @@
 
 #include "main.h"
 #include "config.h"
+#include "Math.h"
 
 /*
  * Runs the user operator control code. This function will be started in its own task with the
@@ -41,14 +42,14 @@ const short int STICK_THRESH = 11,
 
 void operatorControl() {
 	int sticks[4] = { 0, 0, 0, 0 };
-	unsigned int btns[4] = { 0, 0, 0, 0 },
-		btnsLast[4] =  { 0, 0, 0, 0 };
-	int mtrPwr[5] = { 0, 0, 0, 0, 0 },
-		mtrPwrLast[5] = { 0, 0, 0, 0, 0};
+	unsigned int btns[4] = { 0, 0, 0, 0 };
+	//unsigned int btnsLast[4] =  { 0, 0, 0, 0 };
+	int mtrPwr[5] = { 0, 0, 0, 0, 0 };
+	//int mtrPwrLast[5] = { 0, 0, 0, 0, 0};
 
 	while (true) {
 		for(int i = 0; i < 4; i++)
-			sticks[i] = (abs(joystickGetAnalog(0, i)) >= STICK_THRESH)
+			sticks[i] = (Math.abs(joystickGetAnalog(0, i)) >= STICK_THRESH)
 				? joystickGetAnalog(0, i)
 				: 0;
 		for(int group = 0; group < 4; group++) {
@@ -83,18 +84,21 @@ void operatorControl() {
 				: -127
 			: 0;
 
-
 		setDriveL(mtrPwr[LEFT_DRIVE]);
 		setDriveR(mtrPwr[RIGHT_DRIVE]);
 		setLift(mtrPwr[LIFT]);
 		setGoal(mtrPwr[MOBILE_GOAL]);
 		setIntake(mtrPwr[INTAKE]);
 
+		/*
 		for(unsigned int i = 0; i < sizeof(mtrPwr) / sizeof(int); i++)
 			mtrPwrLast[i] = mtrPwr[i];
-
+		*/
+		
+		/*
 		for(unsigned int i = 0; i < sizeof(btns) / sizeof(int); i++)
 			btnsLast[i] = btns[i];
+		*/
 
 		delay(20);
 	}
