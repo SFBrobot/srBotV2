@@ -11,6 +11,8 @@
  */
 
 #include "main.h"
+#include "config.h"
+#include "prosPid.h"
 
 /*
  * Runs the user autonomous code. This function will be started in its own task with the default
@@ -26,5 +28,34 @@
  * The autonomous task may exit, unlike operatorControl() which should never exit. If it does
  * so, the robot will await a switch to another mode or disable/enable cycle.
  */
+
+Pid lDrivePid = Pid(.1, .001, .01, 60, 127);
+Pid rDrivePid = Pid(.1, .001, .01, 60, 127);
+Pid liftPid = Pid(.1, .001, .01, 60, 127);
+Pid goalPid = Pid(.1, .001, .01, 60, 127);
+
+void updatePids(void* params) {
+  while(true) {
+    lDrivePid.pidUpdate(encoderGet(Encs[lDriveEnc]), millis());
+    rDrivePid.pidUpdate(encoderGet(Encs[rDriveEnc]), millis());
+    liftPid.pidUpdate(analogRead(liftPot), millis());
+    goalPid.pidUpdate(analogRead(goalPot), millis());
+    if(lDrivePid.bIsEnabled)
+      setDriveL(lDrivePid.getMtrPwr());
+    if(rDrivePid.bIsEnabled)
+      setDriveR(rDrivePid.getMtrPwr());
+    if(liftPid.bIsEnabled)
+      setLift(liftPid.getMtrPwr());
+    if(goalPid.bIsEnabled)
+      setGoal(goalPid.getMtrPwr());
+    delay(20);
+  }
+}
+
 void autonomous() {
+  TaskHandle pidUpdater = taskCreate(updatePids, TASK_DEFAULT_STACK_SIZE, NULL, TASK_PRIORITY_DEFAULT);
+
+
+
+  taskDelete(pidUpdater);
 }

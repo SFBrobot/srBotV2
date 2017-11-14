@@ -12,13 +12,12 @@
 
 #include "main.h"
 #include "config.h"
+#include "prosPid.h"
 
 const unsigned int AUTON_SELECT_TIMEOUT = 8 * 1000;
 const short AUTON_ROUTINE_MAX = 8;
 
-Encoder Encs[2];
-
-short int autonRoutine = 0;
+short autonRoutine = 0;
 
 /*
  * Runs pre-initialization code. This function will be started in kernel mode one time while the
@@ -48,9 +47,8 @@ void initialize() {
 	bool autonConfirm = false;
 	char str[16];
 	setTeamName("4800A");
-	for(unsigned int i = 0; i < sizeof(Encs) / sizeof(Encoder); i++) {
-		Encs[i] = encoderInit(i+1, i+2, false);
-	}
+	Encs[lDriveEnc] = encoderInit(lDriveEnc_Upper, lDriveEnc_Lower, false);
+	Encs[rDriveEnc] = encoderInit(rDriveEnc_Upper, rDriveEnc_Lower, false);
 	lcdInit(uart1);
 	lcdInit(uart2);
 	lcdClear(uart1);
