@@ -55,26 +55,27 @@ void initialize() {
 	lcdClear(uart2);
 	lcdSetBacklight(uart1, true);
 	lcdSetBacklight(uart2, true);
-	lcdSetText(uart1, 1, " Auton Selected ");
-	int time0 = millis();
-	while(millis() - time0 < AUTON_SELECT_TIMEOUT && !autonConfirm) {
-		snprintf(str, 16, "         %d           ", autonRoutine);
-		lcdSetText(uart1, 2, str);
+	if(isOnline()) {
+		lcdSetText(uart1, 1, " Auton Selected ");
+		int time0 = millis();
+		while(millis() - time0 < AUTON_SELECT_TIMEOUT && !autonConfirm) {
+			snprintf(str, 16, "         %d           ", autonRoutine);
+			lcdSetText(uart1, 2, str);
 
-		if(lcdReadButtons(uart1) == LCD_BTN_LEFT)
-			autonRoutine--;
-		else if(lcdReadButtons(uart1) == LCD_BTN_RIGHT)
-			autonRoutine++;
-		if(autonRoutine < 0)
-			autonRoutine = AUTON_ROUTINE_MAX;
-		else if(autonRoutine > AUTON_ROUTINE_MAX)
+			if(lcdReadButtons(uart1) == LCD_BTN_LEFT)
+				autonRoutine--;
+				else if(lcdReadButtons(uart1) == LCD_BTN_RIGHT)
+				autonRoutine++;
+				if(autonRoutine < 0)
+				autonRoutine = AUTON_ROUTINE_MAX;
+				else if(autonRoutine > AUTON_ROUTINE_MAX)
+				autonRoutine = 0;
+
+				if(lcdReadButtons(uart1) == LCD_BTN_CENTER)
+				autonConfirm = true;
+			}
+			if(!autonConfirm)
 			autonRoutine = 0;
-
-		if(lcdReadButtons(uart1) == LCD_BTN_CENTER)
-			autonConfirm = true;
+			lcdSetBacklight(uart1, false);
 	}
-	if(!autonConfirm)
-		autonRoutine = 0;
-	lcdSetBacklight(uart1, false);
-
 }
